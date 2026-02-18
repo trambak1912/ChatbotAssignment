@@ -1,0 +1,8 @@
+{
+  "englishKeywords": ["passport", "renew", "documents", "application", "office"],
+  "arabicKeywords": ["جواز", "تجديد", "مستندات", "طلب", "مكتب"],
+  "maliciousInputs": [
+    "<script>alert(1)</script>",
+    "<img src='x' onerror='alert(1)'/>"
+  ]
+}
