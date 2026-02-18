@@ -8,9 +8,7 @@ async function ensureChatOpen(page: Page) {
   await expect(page.locator("#chat-widget")).toBeVisible();
 }
 
-/**
-Send a message and wait for response
- */
+
 async function sendMessage(page: Page, message: string) {
   const input = page.locator("#chat-input");
   const sendBtn = page.locator("#send-button");
@@ -19,11 +17,7 @@ async function sendMessage(page: Page, message: string) {
   await expect(input).toHaveValue(message);
 
   await sendBtn.click();
-
-  // Ensure user message displayed
   await expect(page.locator(".user-message").last()).toHaveText(message);
-
-  // Wait for response
   await expect(page.locator(".ai-message").last()).toBeVisible();
 }
 
@@ -33,7 +27,6 @@ test.describe("A. Chatbot UI Behavior", () => {
     await ensureChatOpen(page);
   });
 
-  // 1. Chat widget loads correctly (Desktop & Mobile)
   test("Chat widget renders properly", async ({ page }) => {
     const widget = page.locator("#chat-widget");
     await expect(widget).toBeVisible();
@@ -43,7 +36,6 @@ test.describe("A. Chatbot UI Behavior", () => {
     await expect(page.locator("#chat-messages")).toBeVisible();
   });
 
-  // User can send message via input box
   test("User can send message", async ({ page }) => {
     const message = "Hello chatbot";
     await sendMessage(page, message);
@@ -52,7 +44,6 @@ test.describe("A. Chatbot UI Behavior", () => {
     await expect(lastUserMessage).toContainText(message);
   });
 
-  // AI responses are rendered properly
   test("AI response renders correctly inside conversation area", async ({
     page,
   }) => {
@@ -61,16 +52,12 @@ test.describe("A. Chatbot UI Behavior", () => {
     const aiMessage = page.locator(".ai-message").last();
 
     await expect(aiMessage).toBeVisible();
-
-    // Ensure it contains meaningful content
     const text = await aiMessage.textContent();
     expect(text?.length).toBeGreaterThan(20);
 
-    // Ensure message is inside chat container
     await expect(page.locator("#chat-messages")).toContainText(text!);
   });
 
-  // Multilingual support (LTR / RTL)
   test("English renders LTR direction", async ({ page }) => {
     await sendMessage(page, "Hello");
 
@@ -85,7 +72,6 @@ test.describe("A. Chatbot UI Behavior", () => {
     await expect(message).toHaveCSS("direction", "rtl");
   });
 
-  // Input is cleared after sending
   test("Input clears after sending message", async ({ page }) => {
     const input = page.locator("#chat-input");
 
@@ -95,7 +81,6 @@ test.describe("A. Chatbot UI Behavior", () => {
     await expect(input).toHaveValue("");
   });
 
-  // Scroll behavior works correctly
   test("Chat scrolls automatically to latest message", async ({ page }) => {
     const container = page.locator("#chat-messages");
 
@@ -111,7 +96,6 @@ test.describe("A. Chatbot UI Behavior", () => {
       };
     });
 
-    // Validate that scroll moved
     expect(
       scrollPosition.scrollTop + scrollPosition.clientHeight,
     ).toBeGreaterThanOrEqual(scrollPosition.scrollHeight - 5);

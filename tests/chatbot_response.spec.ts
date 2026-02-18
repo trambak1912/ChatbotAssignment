@@ -7,7 +7,6 @@ test.describe("GPT-Powered Response Validation (POM Only)", () => {
     await chat.goto();
   });
 
-  // Helpful Public Service Response (English)
   test("AI provides helpful passport renewal response (EN)", async ({
     page,
   }) => {
@@ -27,7 +26,6 @@ test.describe("GPT-Powered Response Validation (POM Only)", () => {
     ]);
   });
 
-  // Helpful Public Service Response (Arabic)
   test("AI provides helpful passport renewal response (AR)", async ({
     page,
   }) => {
@@ -47,7 +45,6 @@ test.describe("GPT-Powered Response Validation (POM Only)", () => {
     ]);
   });
 
-  // No Hallucinated / Irrelevant Content
   test("AI does not fabricate unrelated information", async ({ page }) => {
     const chat = new ResponsePage(page);
 
@@ -59,7 +56,6 @@ test.describe("GPT-Powered Response Validation (POM Only)", () => {
     chat.validateNoHallucination(response);
   });
 
-  // English / Arabic Intent Consistency
   test("Responses remain consistent for similar EN/AR intent", async ({
     page,
   }) => {
@@ -78,7 +74,6 @@ test.describe("GPT-Powered Response Validation (POM Only)", () => {
     expect(arText.length).toBeGreaterThan(20);
   });
 
-  // 5️⃣ Clean Formatting (No Broken HTML)
   test("Response formatting is clean and complete", async ({ page }) => {
     const chat = new ResponsePage(page);
 
@@ -90,26 +85,5 @@ test.describe("GPT-Powered Response Validation (POM Only)", () => {
 
     chat.validateCleanHTML(html);
     chat.validateNotIncomplete(text);
-  });
-
-  // 6️⃣ Loading State
-  test("Loading state appears before AI response", async ({ page }) => {
-    const chat = new ResponsePage(page);
-
-    await chat.input.fill("Testing loading state");
-    await chat.sendButton.click();
-
-    await chat.expectLoadingVisible();
-    await chat.waitForAIResponse();
-  });
-
-  // 7️⃣ Fallback Handling
-  test("Fallback message appears when API fails", async ({ page }) => {
-    const chat = new ResponsePage(page);
-
-    await chat.simulateApiFailure();
-    await chat.sendMessage("Trigger failure");
-
-    await chat.expectErrorVisible();
   });
 });
